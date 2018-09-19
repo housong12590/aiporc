@@ -1,0 +1,4 @@
+[data]
+author = hous
+work_dir = E:/code/python/aiporc/__pycache__
+
