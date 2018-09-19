@@ -3,7 +3,7 @@ import os
 
 cf = configparser.ConfigParser()
 
-filename = r'my.txt'
+filename = r'conf.ini'
 
 if os.path.exists(filename) is False:
     open(filename, 'w').close()
