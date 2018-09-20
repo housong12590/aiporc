@@ -1,6 +1,6 @@
 import sys
 import os
-import config
+from config import conf
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from main_page import Ui_MainWindow
 from PyQt5.QtWidgets import QFileDialog
@@ -17,13 +17,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.init()
 
     def init(self):
-        work_dir = config.CONFIG.get('work_dir', '')
+        work_dir = conf.get('work_dir')
         self.work_dir.setText(work_dir)
 
     def select_dir(self):
         work_dir = QFileDialog.getExistingDirectory(self, "选择工作路径", os.getcwd())
-        self.work_dir.setText(work_dir)
-        config.write({'work_dir': str(work_dir)})
+        if work_dir:
+            self.work_dir.setText(work_dir)
+            conf.put('work_dir', work_dir)
 
     def start_click(self):
         if self.is_start:

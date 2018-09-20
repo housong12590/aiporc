@@ -1,42 +1,35 @@
 import configparser
 import os
 
-cf = configparser.ConfigParser()
 
-filename = r'conf.ini'
+class DataConfig(object):
 
-if os.path.exists(filename) is False:
-    open(filename, 'w').close()
+    def __init__(self, path='conf.ini', section='CONFIG'):
+        self.conf = configparser.ConfigParser()
+        self.path = path
+        self.section = section
+        self.__check_file()
+        self.conf.read(path)
 
-cf.read(filename)
+    def __check_file(self):
+        if os.path.exists(self.path) is False:
+            open(self.path, 'w').close()
 
+    def save(self):
+        self.conf.write(open(self.path, 'w+'))
 
-def init_config():
-    secs = cf.sections()
-    if 'data' not in secs:
-        cf.add_section('data')
-        cf.write(open(filename, 'w+'))
+    def put(self, key, value):
+        if self.conf.has_section(self.section) is False:
+            self.conf.add_section(self.section)
+        self.conf.set(self.section, key, value)
+        self.save()
+        return self
 
-
-init_config()
-
-
-def load_data():
-    _config = {}
-    for item in cf.items('data'):
-        key, value = item
-        _config[key] = value
-    return _config
-
-
-CONFIG = load_data()
-
-
-def write(item: dict):
-    for k, v in item.items():
-        CONFIG[k] = v
-        cf.set('data', k, v)
-    cf.write(open(filename, 'w+'))
+    def get(self, key):
+        if self.conf.has_section(self.section):
+            if self.conf.has_option(self.section, key):
+                return self.conf.get(self.section, key)
+        return ''
 
 
-
+conf = DataConfig()
